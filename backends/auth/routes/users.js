@@ -39,7 +39,7 @@ const  post = async (req, res, next) => {
 
                 res.status(200).json({
                     user: user,
-                    token: jwt.sign(payload, config.jwtSecretKey, {expiresIn:'1d'})
+                    token: jwt.sign(payload, config.jwtSecretKey, {expiresIn:'100d'})
                 });
             });
         });
@@ -57,7 +57,7 @@ async function insertUser(user, cb) {
           'values (jsao_users_seq.nextval,' +
           ':email,' +
           ':password,' +
-          '\'ADMIN\' )' +
+          '\'BASE\' )' +
           'returning ' +
           'id,' +
           'email, ' +
