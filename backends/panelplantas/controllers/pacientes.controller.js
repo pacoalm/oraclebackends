@@ -129,3 +129,92 @@ export const getEvolucionesMedicas= async (req, res) => {
         )
 }
 
+export const getInformes= async (req, res) => {
+
+    const pool = await getConnection();
+    var sql="";
+    console.log(req.params.client);
+    
+    sql= "SELECT * FROM  V07_PNL_DAME_INFORMES_PAC where client =" + req.params.client;
+    console.log(sql);
+
+    pool
+        .execute(sql,[], {outFormat: oracledb.OBJECT}, 
+        function(err,result) {
+            if (err) {
+                console.log ('Error el ejecutar la query:' + err.message)
+                res.writeHead(500, {'Content-Type': 'application/json'});
+                res.end(JSON.stringify({
+                    status:500,
+                    message:"Error recuperando informes del paciente",
+                    detailed_message: err.message
+                }));
+            }
+            else {
+                res.writeHead(200, {'Content-Type': 'application/json'});
+                res.end(JSON.stringify(result.rows));
+            }
+        }
+        )
+}
+
+export const getAnaliticas= async (req, res) => {
+
+    const pool = await getConnection();
+    var sql="";
+    console.log(req.params.client);
+    
+    sql= "SELECT * FROM  V07_PNL_DAME_ANALITICAS where client =" + req.params.client;
+    console.log(sql);
+
+    pool
+        .execute(sql,[], {outFormat: oracledb.OBJECT}, 
+        function(err,result) {
+            if (err) {
+                console.log ('Error el ejecutar la query:' + err.message)
+                res.writeHead(500, {'Content-Type': 'application/json'});
+                res.end(JSON.stringify({
+                    status:500,
+                    message:"Error recuperando informes del paciente",
+                    detailed_message: err.message
+                }));
+            }
+            else {
+                res.writeHead(200, {'Content-Type': 'application/json'});
+                res.end(JSON.stringify(result.rows));
+            }
+        }
+        )
+}
+
+export const quitarMarcaNuevo = async (req, res) =>{
+
+    console.log('Quitar la marca de nuevo paciente');
+    console.log(req.body);
+
+    const pool = await getConnection();
+   
+    var body = req.body;
+
+    if (body.subencounter) {
+        var sql = "INSERT INTO pnl_nuevos_ingresos VALUES(" + body.subencounter + ")"
+    }
+    else {
+        res.status(500).send('No se ha proporcionado subepisodio');
+        return;
+    }
+        
+    console.log(sql);
+    pool.execute (sql, [],
+    function (err, result) {
+        if (err) {
+            console.error(err.message);
+            res.status(500).send('Error al insertar subencounter');
+            return;
+                }
+        res.status(200).send('Inserción correcta');
+            return;
+
+    })
+   
+}

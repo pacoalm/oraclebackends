@@ -38,7 +38,7 @@ export const getCamasMed = async (req, res) => {
     var sql="";
     console.log(req.query.medico);
     
-    sql= "SELECT * FROM v07_dame_camas where SidMedico =" + req.query.medico;
+    sql= "SELECT * FROM v07_dame_camas where Servicio <> '07-RES' AND SidMedico =" + req.query.medico;
     console.log(sql);
 
     pool
