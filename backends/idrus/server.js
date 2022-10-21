@@ -2,7 +2,7 @@
 import express from "express";
 
 import citasRouter from "./routes/citas.routes"
-
+import encuestasRouter from "./routes/encuestas.routes"
 
 const bodyParser=require('body-parser');
 const cors = require("cors")
@@ -25,6 +25,8 @@ app.use(function (req, res, next) {
 
 let port = process.env.PORT;
 app.use(citasRouter);
+app.use(encuestasRouter);
+
 app.use(cors);
 app.set("port",port);
 
