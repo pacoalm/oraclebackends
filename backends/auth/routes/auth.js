@@ -20,7 +20,7 @@ function auth(role) {
             
             }catch (e) {
             if (e.name === 'TokenExpiredError') {
-            res.status(401).send({message: "Autorización expirada"})
+            res.status(401).send({message: "Autorización expirada. Contacte con HospitalTenerife@sjd.es"})
             } else {
             res.status(401).send({message: "Autorización invalida"})
             }
