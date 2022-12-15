@@ -75,9 +75,9 @@ export const postUbicacion = async (req, res) => {
    
     var body = req.body;
 
-    if (body.descripcion && body.alias && body.tipo & body.activa && body.facility) {
+    if (body.DESCRIPCION && body.ALIAS && body.TIPO && body.facility) {
         var sql = "INSERT INTO pq_ubicaciones (uuid, facility, descripcion, alias, tipo, activa_sn) VALUES('" + uuidv4() + "'," + body.facility +
-                  ",'" + body.descripcion + "','" + body.alias + "'," + body.tipo + ",'" + (body.activa===0? 'N':'S') + "')"
+                  ",'" + body.DESCRIPCION + "','" + body.ALIAS + "'," + body.TIPO + ",'" + (body.ACTIVA ==="0"? 'N':'S') + "')"
     }
     else {
         res.status(500).send('Error al insertar ubicación. Faltan campos en la cabecera');
@@ -96,8 +96,35 @@ export const postUbicacion = async (req, res) => {
             return;
 
     })
-   
-    
-   
 }
+
+export const getServicios = async (req, res) => {
+
+    const pool = await getConnection();
+    var sql="";
+    console.log(req.params.facility);
+    
+    sql= "SELECT * FROM  V07_PQ_SERVICIOS_QUI where facility =" + req.params.facility;
+    console.log(sql);
+
+    pool
+        .execute(sql,[], {outFormat: oracledb.OBJECT}, 
+        function(err,result) {
+            if (err) {
+                console.log ('Error el ejecutar la query:' + err.message)
+                res.writeHead(500, {'Content-Type': 'application/json'});
+                res.end(JSON.stringify({
+                    status:500,
+                    message:"Error recuperando servicios quirúrgicos",
+                    detailed_message: err.message
+                }));
+            }
+            else {
+                res.writeHead(200, {'Content-Type': 'application/json'});
+                res.end(JSON.stringify(result.rows));
+            }
+        }
+        )
+}
+
 
