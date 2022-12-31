@@ -126,3 +126,79 @@ export const getCitasPr = async(req, res, next) =>{
     );
 } 
 }
+
+
+export const getEstadoCita = async(req, res, next) =>{
+   
+    var sidCita = req.query.sid
+
+
+    if (!sidCita) {
+        res.writeHead(500, {'Content-Type': 'application/json'});
+            res.end(JSON.stringify({
+                status:500,
+                message:"Cita erronea",
+                detailed_message: "Introduzca Sid de la cita"
+            }));
+        
+    } else {
+        
+        const pool = await oracle.getConnection();
+        pool.execute("SELECT nvl(subenc_canc_reason, 0)  as Estado FROM com_subencounters WHERE sid=" + sidCita,[], {outFormat: oracledb.OBJECT}, 
+        function(err,result) {
+        if (err) {
+            console.log ('Error el ejecutar la query:' + err.message)
+            res.writeHead(500, {'Content-Type': 'application/json'});
+            res.end(JSON.stringify({
+                status:500,
+                message:"Error private things",
+                detailed_message: err.message
+            }));
+        }
+        else {
+            
+            res.writeHead(200, {'Content-Type': 'application/json'});
+            res.end(JSON.stringify(result.rows));
+        }
+        }
+        );
+    } 
+}
+
+
+export const getEstadoPrueba = async(req, res, next) =>{
+   
+    var sidCita = req.query.sid
+
+
+    if (!sidCita) {
+        res.writeHead(500, {'Content-Type': 'application/json'});
+            res.end(JSON.stringify({
+                status:500,
+                message:"Cita erronea",
+                detailed_message: "Introduzca Sid de la cita"
+            }));
+        
+    } else {
+        
+        const pool = await oracle.getConnection();
+        pool.execute("SELECT nvl(activ_canc_reason,0) as Estado FROM com_activities WHERE sid=" + sidCita,[], {outFormat: oracledb.OBJECT}, 
+        function(err,result) {
+        if (err) {
+            console.log ('Error el ejecutar la query:' + err.message)
+            res.writeHead(500, {'Content-Type': 'application/json'});
+            res.end(JSON.stringify({
+                status:500,
+                message:"Error private things",
+                detailed_message: err.message
+            }));
+        }
+        else {
+            
+            res.writeHead(200, {'Content-Type': 'application/json'});
+            res.end(JSON.stringify(result.rows));
+        }
+        }
+        );
+    } 
+}

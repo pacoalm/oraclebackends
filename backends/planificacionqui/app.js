@@ -1,8 +1,10 @@
 
 import express from "express";
 import config from "./config";
-import pqRouter from "./routes/pq.routes"
-import pacientesRouter from "./routes/pacientes.routes"
+import pqRouter from "./routes/pq.routes";
+import pacientesRouter from "./routes/pacientes.routes";
+import recursosRouter from "./routes/pq.recursos.routes";
+import plantillasRouter from './routes/pq.plantillas.routes';
 
 
 const bodyParser=require('body-parser');
@@ -25,8 +27,11 @@ app.use(function (req, res, next) {
 });
 
 let port = config.port;
+
 app.use(pqRouter);
 app.use(pacientesRouter);
+app.use(recursosRouter);
+app.use(plantillasRouter);
 
 app.use(cors);
 app.set("port",port);

@@ -75,9 +75,10 @@ export const postUbicacion = async (req, res) => {
    
     var body = req.body;
 
-    if (body.DESCRIPCION && body.ALIAS && body.TIPO && body.facility) {
-        var sql = "INSERT INTO pq_ubicaciones (uuid, facility, descripcion, alias, tipo, activa_sn) VALUES('" + uuidv4() + "'," + body.facility +
-                  ",'" + body.DESCRIPCION + "','" + body.ALIAS + "'," + body.TIPO + ",'" + (body.ACTIVA ==="0"? 'N':'S') + "')"
+    if (body.DESCRIPCION && body.ALIAS && body.TIPO && body.facility ) {
+        var sql = "INSERT INTO pq_ubicaciones (uuid, facility, descripcion, alias, tipo, activa_sn, servicio) VALUES('" + uuidv4() + "'," + body.facility +
+                  ",'" + body.DESCRIPCION + "','" + body.ALIAS + "'," + body.TIPO + ",'" + (body.ACTIVA ==="0"? 'N':'S') + "'," +
+                  (body.SERVICIO==null  ? null + ")"  : "'" + body.SERVICIO + "')")
     }
     else {
         res.status(500).send('Error al insertar ubicación. Faltan campos en la cabecera');
@@ -127,4 +128,61 @@ export const getServicios = async (req, res) => {
         )
 }
 
+export const insertarServicioQUI=async (req, res) => {
 
+
+    var body = req.body;
+
+    if (body.facility && body.servicio) {
+        var sql = "INSERT INTO pq_servicios_qui (facility, xkey) VALUES(" + body.facility + ",'" + body.servicio + "')"
+    }
+    else {
+        
+        res.status(500).send('Error al insertar servicio. Faltan campos en el cuerpo del mensaje');
+        return;
+    }
+    const pool = await getConnection();
+    console.log(sql);
+    pool.execute (sql, [],
+    function (err, result) {
+        if (err) {
+            console.error(err.message);
+            res.status(500).send('Error al insertar servicio');
+            return;
+                }
+        res.status(200).send('Inserción correcta');
+            return;
+
+    })
+
+}
+
+
+export const borrarServicioQUI=async (req, res) => {
+
+
+    var body = req.body;
+
+    if (body.facility && body.servicio) {
+        var sql = "DELETE FROM pq_servicios_qui WHERE facility=" + body.facility + " AND xkey='" + body.servicio + "'"
+    }
+    else {
+        
+        res.status(500).send('Error al body servicio. Faltan campos en el cuerpo del mensaje');
+        return;
+    }
+    const pool = await getConnection();
+    console.log(sql);
+    pool.execute (sql, [],
+    function (err, result) {
+        if (err) {
+            console.error(err.message);
+            res.status(500).send('Error al borrar servicio');
+            return;
+                }
+        res.status(200).send('Borrado correcto');
+            return;
+
+    })
+
+}
