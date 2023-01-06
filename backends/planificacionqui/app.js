@@ -5,7 +5,7 @@ import pqRouter from "./routes/pq.routes";
 import pacientesRouter from "./routes/pacientes.routes";
 import recursosRouter from "./routes/pq.recursos.routes";
 import plantillasRouter from './routes/pq.plantillas.routes';
-
+import programacionRouter from './routes/pq.programacion.routes';
 
 const bodyParser=require('body-parser');
 const cors = require("cors")
@@ -32,6 +32,7 @@ app.use(pqRouter);
 app.use(pacientesRouter);
 app.use(recursosRouter);
 app.use(plantillasRouter);
+app.use(programacionRouter);
 
 app.use(cors);
 app.set("port",port);
